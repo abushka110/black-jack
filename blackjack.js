@@ -24,10 +24,47 @@ let canHit = true;
 
 // Wird ausgeführt, sobald die Webseite geladen ist
 window.onload = function () {
+
     buildDeck();
     shuffleDeck();
+
     startGame();
+
+    document
+        .getElementById("new-game")
+        .addEventListener("click", resetGame);
 };
+
+// Neue Spiel starten
+function resetGame() {
+
+    // Werte zurücksetzen
+    dealerSum = 0;
+    dealerVisibleSum = 0;
+    yourSum = 0;
+
+    dealerAceCount = 0;
+    yourAceCount = 0;
+
+    canHit = true;
+
+    // Spielbereich leeren
+    document.getElementById("dealer-cards").innerHTML =
+        '<img id="hidden" src="./cards/BACK.png">';
+
+    document.getElementById("your-cards").innerHTML = "";
+
+    document.getElementById("dealer-sum").innerText = "";
+    document.getElementById("your-sum").innerText = "";
+
+    document.getElementById("results").innerText = "";
+
+    // Neues Deck
+    buildDeck();
+    shuffleDeck();
+
+    startGame();
+}
 
 // Erstellt ein Standarddeck mit 52 Karten
 function buildDeck() {
