@@ -45,6 +45,12 @@ window.onload = function () {
     shuffleDeck();
     startGame();
 
+    document.getElementById("hit")
+        .addEventListener("click", hit);
+
+    document.getElementById("stay")
+        .addEventListener("click", stay);
+
     document.getElementById("new-game")
         .addEventListener("click", resetGame);
 };
@@ -179,7 +185,6 @@ function finishGame(result) {
 
             // Einsatz zum Guthaben hinzufügen
             playerCoins += currentBet;
-
             message = "Gewonnen";
             break;
 
@@ -188,7 +193,6 @@ function finishGame(result) {
 
             // Einsatz vom Guthaben abziehen
             playerCoins -= currentBet;
-
             message = "Dealer gewinnt";
             break;
 
