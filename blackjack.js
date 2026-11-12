@@ -1,5 +1,7 @@
 // Punktestand des Dealers
 let dealerSum = 0;
+// Punktestand des Dealers die man sehen darf
+let dealerVisibleSum = 0;
 
 // Punktestand des Spielers
 let yourSum = 0;
@@ -58,6 +60,12 @@ function shuffleDeck() {
     console.log(deck);
 }
 
+function updateScoreDisplay() {
+    document.getElementById("dealer-sum").innerText = dealerVisibleSum;
+
+    document.getElementById("your-sum").innerText = reduceAce(yourSum, yourAceCount);
+}
+
 // Startet das Spiel
 function startGame() {
 
@@ -77,6 +85,10 @@ function startGame() {
 
         dealerSum += getValue(card);
         dealerAceCount += checkAce(card);
+
+        if(dealerVisibleSum === 0) {
+            dealerVisibleSum = getvalue(card);
+        }
 
         document.getElementById("dealer-cards").append(cardImg);
     }
@@ -98,6 +110,9 @@ function startGame() {
     // Button-Events registrieren
     document.getElementById("hit").addEventListener("click", hit);
     document.getElementById("stay").addEventListener("click", stay);
+
+    // Punkte direkt anzeigen
+    updateScoreDisplay();
 }
 
 // Spieler zieht eine weitere Karte
@@ -118,6 +133,9 @@ function hit() {
     yourAceCount += checkAce(card);
 
     document.getElementById("your-cards").append(cardImg);
+
+    // Punkte sofort aktualisieren
+    updateScoreDisplay();
 
     // Ass-Werte korrigieren und Bust prüfen
     if (reduceAce(yourSum, yourAceCount) > 21) {
@@ -154,7 +172,7 @@ function stay() {
         message = "You Lose!";
     }
 
-    document.getElementById("dealer-sum").innerText = dealerSum;
+    document.getElementById("dealer-sum").innerText = reduceAce(dealerSum, dealerAceCount);
     document.getElementById("your-sum").innerText = yourSum;
     document.getElementById("results").innerText = message;
 }
