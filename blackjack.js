@@ -234,6 +234,7 @@ function finishGame(result) {
 // Startet das Spiel
 function startGame() {
 
+    // Prüft ob genügend KeckCoins vorhanden sind
     if (playerCoins < currentBet) {
 
         document.getElementById("results").innerText =
