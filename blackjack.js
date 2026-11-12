@@ -123,67 +123,99 @@ function updateScoreDisplay() {
     document.getElementById("your-sum").innerText = reduceAce(yourSum, yourAceCount);
 }
 
+// Prüft den Spielausgang
+// Rückgabewerte:
+// "win"  = Spieler gewinnt
+// "lose" = Dealer gewinnt
+// "tie"  = Unentschieden
 function evaluateGame() {
 
+    // Endgültige Punktzahl des Dealers berechnen
     const finalDealerSum =
         reduceAce(dealerSum, dealerAceCount);
 
+    // Endgültige Punktzahl des Spielers berechnen
     const finalYourSum =
         reduceAce(yourSum, yourAceCount);
 
+    // Spieler hat sich überkauft
     if (finalYourSum > 21) {
-        return "Dealer Gewinnt";
+        return "lose";
     }
 
+    // Dealer hat sich überkauft
     if (finalDealerSum > 21) {
-        return "Gewonnen";
+        return "win";
     }
 
+    // Gleiche Punktzahl
     if (finalYourSum === finalDealerSum) {
-        return "Unentschieden";
+        return "tie";
     }
 
+    // Spieler hat mehr Punkte
     if (finalYourSum > finalDealerSum) {
-        return "Gewonnen";
+        return "win";
     }
 
-    return "Dealer Gewinnt";
+    // Dealer hat mehr Punkte
+    return "lose";
 }
 
+// Beendet das Spiel
+// Passt das Guthaben an
+// Aktualisiert die Anzeige
 function finishGame(result) {
 
+    // Spieler darf keine Karten mehr ziehen
     canHit = false;
 
     let message = "";
 
     switch (result) {
 
+        // Spieler gewinnt
         case "win":
+
+            // Einsatz zum Guthaben hinzufügen
             playerCoins += currentBet;
+
             message = "Gewonnen";
             break;
 
+        // Dealer gewinnt
         case "lose":
+
+            // Einsatz vom Guthaben abziehen
             playerCoins -= currentBet;
+
             message = "Dealer gewinnt";
             break;
 
+        // Unentschieden
         case "tie":
+
+            // Guthaben bleibt unverändert
             message = "Unentschieden";
             break;
     }
 
+    // Neues Guthaben speichern
     localStorage.setItem("coins", playerCoins);
 
+    // Guthaben auf der Webseite aktualisieren
     document.getElementById("coins-display").innerText =
         "Guthaben: " + playerCoins + " KeckCoins";
 
+    // Finale Dealer-Punktzahl anzeigen
     document.getElementById("dealer-sum").innerText =
         reduceAce(dealerSum, dealerAceCount);
 
+    // Finale Spieler-Punktzahl anzeigen
     document.getElementById("your-sum").innerText =
         reduceAce(yourSum, yourAceCount);
 
+    // Ergebnis anzeigen
     document.getElementById("results").innerText =
         message;
 }
@@ -235,60 +267,88 @@ function startGame() {
 // Spieler zieht eine weitere Karte
 function hit() {
 
+    // Falls keine weitere Karte gezogen werden darf
     if (!canHit) {
         return;
     }
 
+    // Neues Kartenbild erzeugen
     let cardImg = document.createElement("img");
 
+    // Oberste Karte vom Deck ziehen
     let card = deck.pop();
 
+    // Kartenbild setzen
     cardImg.src = "./cards/" + card + ".png";
 
+    // Punkte des Spielers erhöhen
     yourSum += getValue(card);
+
+    // Anzahl der Asse aktualisieren
     yourAceCount += checkAce(card);
 
+    // Karte anzeigen
     document.getElementById("your-cards").append(cardImg);
 
+    // Punkteanzeige aktualisieren
     updateScoreDisplay();
 
+    // Prüfen ob Spieler über 21 Punkte hat
     if (reduceAce(yourSum, yourAceCount) > 21) {
 
+        // Dealer-Karte aufdecken
         document.getElementById("hidden").src =
             "./cards/" + hidden + ".png";
 
+        // Spiel sofort verloren
         finishGame("lose");
     }
 }
 
 // Spieler bleibt stehen und Runde wird ausgewertet
+// Dealer zieht nun Karten
 async function stay() {
 
+    // Spieler darf keine Karten mehr ziehen
     canHit = false;
 
+    // Verdeckte Dealer-Karte aufdecken
     document.getElementById("hidden").src =
         "./cards/" + hidden + ".png";
 
+    // Dealer zieht solange bis mindestens 17 Punkte erreicht sind
     while (reduceAce(dealerSum, dealerAceCount) < 17) {
 
+        // 1 Sekunde warten
         await sleep(1000);
 
+        // Karte ziehen
         let card = deck.pop();
 
+        // Dealer-Punkte erhöhen
         dealerSum += getValue(card);
+
+        // Dealer-Asse erhöhen
         dealerAceCount += checkAce(card);
 
+        // Kartenbild erzeugen
         let cardImg = document.createElement("img");
+
+        // Bildquelle setzen
         cardImg.src = "./cards/" + card + ".png";
 
+        // Karte anzeigen
         document.getElementById("dealer-cards").append(cardImg);
 
+        // Dealer-Punkte aktualisieren
         document.getElementById("dealer-sum").innerText =
             reduceAce(dealerSum, dealerAceCount);
     }
 
+    // Gewinner bestimmen
     const result = evaluateGame();
 
+    // Spiel beenden
     finishGame(result);
 }
 
