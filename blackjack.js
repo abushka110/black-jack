@@ -53,6 +53,9 @@ window.onload = function () {
 
     document.getElementById("new-game")
         .addEventListener("click", resetGame);
+
+    document.getElementById("back-to-bet")
+        .addEventListener("click", goToBetSelection)
 };
 
 // Neue Spiel starten
