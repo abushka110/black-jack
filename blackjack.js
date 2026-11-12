@@ -235,7 +235,6 @@ function startGame() {
 // Spieler zieht eine weitere Karte
 function hit() {
 
-    // Falls Ziehen nicht erlaubt ist -> sofort beenden
     if (!canHit) {
         return;
     }
@@ -251,15 +250,13 @@ function hit() {
 
     document.getElementById("your-cards").append(cardImg);
 
-    // Punkte sofort aktualisieren
     updateScoreDisplay();
 
-    // Ass-Werte korrigieren und Bust prüfen
     if (reduceAce(yourSum, yourAceCount) > 21) {
-    
+
         document.getElementById("hidden").src =
             "./cards/" + hidden + ".png";
-    
+
         finishGame("lose");
     }
 }
@@ -269,24 +266,23 @@ async function stay() {
 
     canHit = false;
 
-    // Verdeckte Karte des Dealers anzeigen
-    document.getElementById("hidden").src = "./cards/" + hidden + ".png";
+    document.getElementById("hidden").src =
+        "./cards/" + hidden + ".png";
 
-    // Dealer zieht Karten bis mindestens 17 Punkte erreicht sind
     while (reduceAce(dealerSum, dealerAceCount) < 17) {
 
         await sleep(1000);
-    
+
         let card = deck.pop();
-    
+
         dealerSum += getValue(card);
         dealerAceCount += checkAce(card);
-    
+
         let cardImg = document.createElement("img");
         cardImg.src = "./cards/" + card + ".png";
-    
+
         document.getElementById("dealer-cards").append(cardImg);
-    
+
         document.getElementById("dealer-sum").innerText =
             reduceAce(dealerSum, dealerAceCount);
     }
