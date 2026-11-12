@@ -92,6 +92,148 @@ function resetGame() {
     startGame();
 }
 
+// Startet das Spiel
+function startGame() {
+
+    // Prüft ob genügend KeckCoins vorhanden sind
+    if (playerCoins < currentBet) {
+
+        document.getElementById("results").innerText =
+            "Nicht genügend KeckCoins für diesen Einsatz.";
+        
+        // TODO: an Guthaben Aufladung Seite senden
+        
+        document.getElementById("hit").disabled = true;
+        document.getElementById("stay").disabled = true;
+
+        return;
+    }
+    
+    // Dealer erhält eine verdeckte Karte
+    hidden = deck.pop();
+
+    dealerSum += getValue(hidden);
+    dealerAceCount += checkAce(hidden);
+    
+   // sichtbare Karte
+   let visibleCard = deck.pop();
+
+   dealerVisibleSum = getValue(visibleCard);
+
+   dealerSum += getValue(visibleCard);
+   dealerAceCount += checkAce(visibleCard);
+
+   let cardImg = document.createElement("img");
+   cardImg.src = "./cards/" + visibleCard + ".png";
+
+   document.getElementById("dealer-cards").append(cardImg);
+
+    // Spieler erhält zwei Startkarten
+    for (let i = 0; i < 2; i++) {
+        let cardImg = document.createElement("img");
+
+        let card = deck.pop();
+
+        cardImg.src = "./cards/" + card + ".png";
+
+        yourSum += getValue(card);
+        yourAceCount += checkAce(card);
+
+        document.getElementById("your-cards").append(cardImg);
+    }
+
+    // Punkte direkt anzeigen
+    updateScoreDisplay();
+}
+
+// Spieler zieht eine weitere Karte
+function hit() {
+
+    // Falls keine weitere Karte gezogen werden darf
+    if (!canHit) {
+        return;
+    }
+
+    // Neues Kartenbild erzeugen
+    let cardImg = document.createElement("img");
+
+    // Oberste Karte vom Deck ziehen
+    let card = deck.pop();
+
+    // Kartenbild setzen
+    cardImg.src = "./cards/" + card + ".png";
+
+    // Punkte des Spielers erhöhen
+    yourSum += getValue(card);
+
+    // Anzahl der Asse aktualisieren
+    yourAceCount += checkAce(card);
+
+    // Karte anzeigen
+    document.getElementById("your-cards").append(cardImg);
+
+    // Punkteanzeige aktualisieren
+    updateScoreDisplay();
+
+    // Prüfen ob Spieler über 21 Punkte hat
+    if (reduceAce(yourSum, yourAceCount) > 21) {
+
+        // Dealer-Karte aufdecken
+        document.getElementById("hidden").src =
+            "./cards/" + hidden + ".png";
+
+        // Spiel sofort verloren
+        finishGame("lose");
+    }
+}
+
+// Spieler bleibt stehen und Runde wird ausgewertet
+// Dealer zieht nun Karten
+async function stay() {
+
+    // Spieler darf keine Karten mehr ziehen
+    canHit = false;
+
+    // Verdeckte Dealer-Karte aufdecken
+    document.getElementById("hidden").src =
+        "./cards/" + hidden + ".png";
+
+    // Dealer zieht solange bis mindestens 17 Punkte erreicht sind
+    while (reduceAce(dealerSum, dealerAceCount) < 17) {
+
+        // 1 Sekunde warten
+        await sleep(1000);
+
+        // Karte ziehen
+        let card = deck.pop();
+
+        // Dealer-Punkte erhöhen
+        dealerSum += getValue(card);
+
+        // Dealer-Asse erhöhen
+        dealerAceCount += checkAce(card);
+
+        // Kartenbild erzeugen
+        let cardImg = document.createElement("img");
+
+        // Bildquelle setzen
+        cardImg.src = "./cards/" + card + ".png";
+
+        // Karte anzeigen
+        document.getElementById("dealer-cards").append(cardImg);
+
+        // Dealer-Punkte aktualisieren
+        document.getElementById("dealer-sum").innerText =
+            reduceAce(dealerSum, dealerAceCount);
+    }
+
+    // Gewinner bestimmen
+    const result = evaluateGame();
+
+    // Spiel beenden
+    finishGame(result);
+}
+
 // Zur Seite für die Einsatz-Auswahl zurückkehren
 function goToBetSelection() {
 
@@ -245,148 +387,6 @@ function finishGame(result) {
     // Ergebnis anzeigen
     document.getElementById("results").innerText =
         message;
-}
-
-// Startet das Spiel
-function startGame() {
-
-    // Prüft ob genügend KeckCoins vorhanden sind
-    if (playerCoins < currentBet) {
-
-        document.getElementById("results").innerText =
-            "Nicht genügend KeckCoins für diesen Einsatz.";
-        
-        // TODO: an Guthaben Aufladung Seite senden
-        
-        document.getElementById("hit").disabled = true;
-        document.getElementById("stay").disabled = true;
-
-        return;
-    }
-    
-    // Dealer erhält eine verdeckte Karte
-    hidden = deck.pop();
-
-    dealerSum += getValue(hidden);
-    dealerAceCount += checkAce(hidden);
-    
-   // sichtbare Karte
-   let visibleCard = deck.pop();
-
-   dealerVisibleSum = getValue(visibleCard);
-
-   dealerSum += getValue(visibleCard);
-   dealerAceCount += checkAce(visibleCard);
-
-   let cardImg = document.createElement("img");
-   cardImg.src = "./cards/" + visibleCard + ".png";
-
-   document.getElementById("dealer-cards").append(cardImg);
-
-    // Spieler erhält zwei Startkarten
-    for (let i = 0; i < 2; i++) {
-        let cardImg = document.createElement("img");
-
-        let card = deck.pop();
-
-        cardImg.src = "./cards/" + card + ".png";
-
-        yourSum += getValue(card);
-        yourAceCount += checkAce(card);
-
-        document.getElementById("your-cards").append(cardImg);
-    }
-
-    // Punkte direkt anzeigen
-    updateScoreDisplay();
-}
-
-// Spieler zieht eine weitere Karte
-function hit() {
-
-    // Falls keine weitere Karte gezogen werden darf
-    if (!canHit) {
-        return;
-    }
-
-    // Neues Kartenbild erzeugen
-    let cardImg = document.createElement("img");
-
-    // Oberste Karte vom Deck ziehen
-    let card = deck.pop();
-
-    // Kartenbild setzen
-    cardImg.src = "./cards/" + card + ".png";
-
-    // Punkte des Spielers erhöhen
-    yourSum += getValue(card);
-
-    // Anzahl der Asse aktualisieren
-    yourAceCount += checkAce(card);
-
-    // Karte anzeigen
-    document.getElementById("your-cards").append(cardImg);
-
-    // Punkteanzeige aktualisieren
-    updateScoreDisplay();
-
-    // Prüfen ob Spieler über 21 Punkte hat
-    if (reduceAce(yourSum, yourAceCount) > 21) {
-
-        // Dealer-Karte aufdecken
-        document.getElementById("hidden").src =
-            "./cards/" + hidden + ".png";
-
-        // Spiel sofort verloren
-        finishGame("lose");
-    }
-}
-
-// Spieler bleibt stehen und Runde wird ausgewertet
-// Dealer zieht nun Karten
-async function stay() {
-
-    // Spieler darf keine Karten mehr ziehen
-    canHit = false;
-
-    // Verdeckte Dealer-Karte aufdecken
-    document.getElementById("hidden").src =
-        "./cards/" + hidden + ".png";
-
-    // Dealer zieht solange bis mindestens 17 Punkte erreicht sind
-    while (reduceAce(dealerSum, dealerAceCount) < 17) {
-
-        // 1 Sekunde warten
-        await sleep(1000);
-
-        // Karte ziehen
-        let card = deck.pop();
-
-        // Dealer-Punkte erhöhen
-        dealerSum += getValue(card);
-
-        // Dealer-Asse erhöhen
-        dealerAceCount += checkAce(card);
-
-        // Kartenbild erzeugen
-        let cardImg = document.createElement("img");
-
-        // Bildquelle setzen
-        cardImg.src = "./cards/" + card + ".png";
-
-        // Karte anzeigen
-        document.getElementById("dealer-cards").append(cardImg);
-
-        // Dealer-Punkte aktualisieren
-        document.getElementById("dealer-sum").innerText =
-            reduceAce(dealerSum, dealerAceCount);
-    }
-
-    // Gewinner bestimmen
-    const result = evaluateGame();
-
-    // Spiel beenden
-    finishGame(result);
 }
 
 // Ermittelt den Wert einer Karte
