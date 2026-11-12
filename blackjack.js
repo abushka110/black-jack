@@ -193,7 +193,7 @@ function hit() {
     
         // Niederlage anzeigen
         document.getElementById("results").innerText =
-            "You Lose! Bust!";
+            "Dealer gewinnt";
     }
 }
 
