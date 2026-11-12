@@ -1,3 +1,7 @@
+// KeckCoinszustand
+let playerCoins = 0;
+let currentBet = 0;
+
 // Punktestand des Dealers
 let dealerSum = 0;
 // Punktestand des Dealers die man sehen darf
@@ -25,13 +29,23 @@ let canHit = true;
 // Wird ausgeführt, sobald die Webseite geladen ist
 window.onload = function () {
 
+    playerCoins =
+        parseInt(localStorage.getItem("coins")) || 1000;
+
+    currentBet =
+        parseInt(localStorage.getItem("bet")) || 0;
+
+    document.getElementById("coins-display").innerText =
+        "Guthaben: " + playerCoins + " KeckCoins";
+
+    document.getElementById("bet-display").innerText =
+        "Einsatz: " + currentBet + " KeckCoins";
+
     buildDeck();
     shuffleDeck();
-
     startGame();
 
-    document
-        .getElementById("new-game")
+    document.getElementById("new-game")
         .addEventListener("click", resetGame);
 };
 
