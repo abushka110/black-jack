@@ -76,7 +76,7 @@ function startGame() {
     dealerAceCount += checkAce(hidden);
 
     // Dealer zieht Karten bis mindestens 17 Punkte erreicht sind
-    while (dealerSum < 17) {
+    /* while (dealerSum < 17) {
         let cardImg = document.createElement("img");
 
         let card = deck.pop();
@@ -87,11 +87,23 @@ function startGame() {
         dealerAceCount += checkAce(card);
 
         if(dealerVisibleSum === 0) {
-            dealerVisibleSum = getvalue(card);
+            dealerVisibleSum = getValue(card);
         }
 
         document.getElementById("dealer-cards").append(cardImg);
-    }
+    } */
+   // sichtbare Karte
+   let visibleCard = deck.pop();
+
+   dealerVisibleSum = getValue(visibleCard);
+
+   dealerSum += getValue(visibleCard);
+   dealerAceCount += checkAce(visibleCard);
+
+   let cardImg = document.createElement("img");
+   cardImg.src = "./cards/" + visibleCard + ".png";
+
+   document.getElementById("dealer-cards").append(cardImg);
 
     // Spieler erhält zwei Startkarten
     for (let i = 0; i < 2; i++) {
