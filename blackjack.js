@@ -242,7 +242,9 @@ function startGame() {
 
         document.getElementById("results").innerText =
             "Nicht genügend KeckCoins für diesen Einsatz.";
-
+        
+        // TODO: an Guthaben Aufladung Seite senden
+        
         document.getElementById("hit").disabled = true;
         document.getElementById("stay").disabled = true;
 
