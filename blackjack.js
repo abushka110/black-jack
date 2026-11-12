@@ -123,6 +123,71 @@ function updateScoreDisplay() {
     document.getElementById("your-sum").innerText = reduceAce(yourSum, yourAceCount);
 }
 
+function evaluateGame() {
+
+    const finalDealerSum =
+        reduceAce(dealerSum, dealerAceCount);
+
+    const finalYourSum =
+        reduceAce(yourSum, yourAceCount);
+
+    if (finalYourSum > 21) {
+        return "Dealer Gewinnt";
+    }
+
+    if (finalDealerSum > 21) {
+        return "Gewonnen";
+    }
+
+    if (finalYourSum === finalDealerSum) {
+        return "Unentschieden";
+    }
+
+    if (finalYourSum > finalDealerSum) {
+        return "Gewonnen";
+    }
+
+    return "Dealer Gewinnt";
+}
+
+function finishGame(result) {
+
+    canHit = false;
+
+    let message = "";
+
+    switch (result) {
+
+        case "win":
+            playerCoins += currentBet;
+            message = "Gewonnen";
+            break;
+
+        case "lose":
+            playerCoins -= currentBet;
+            message = "Dealer gewinnt";
+            break;
+
+        case "tie":
+            message = "Unentschieden";
+            break;
+    }
+
+    localStorage.setItem("coins", playerCoins);
+
+    document.getElementById("coins-display").innerText =
+        "Guthaben: " + playerCoins + " KeckCoins";
+
+    document.getElementById("dealer-sum").innerText =
+        reduceAce(dealerSum, dealerAceCount);
+
+    document.getElementById("your-sum").innerText =
+        reduceAce(yourSum, yourAceCount);
+
+    document.getElementById("results").innerText =
+        message;
+}
+
 // Startet das Spiel
 function startGame() {
 
@@ -192,30 +257,15 @@ function hit() {
     // Ass-Werte korrigieren und Bust prüfen
     if (reduceAce(yourSum, yourAceCount) > 21) {
     
-        canHit = false;
-    
-        // Dealer-Karte aufdecken
         document.getElementById("hidden").src =
             "./cards/" + hidden + ".png";
     
-        // Endgültige Werte anzeigen
-        document.getElementById("dealer-sum").innerText =
-            reduceAce(dealerSum, dealerAceCount);
-    
-        document.getElementById("your-sum").innerText =
-            reduceAce(yourSum, yourAceCount);
-    
-        // Niederlage anzeigen
-        document.getElementById("results").innerText =
-            "Dealer gewinnt";
+        finishGame("lose");
     }
 }
 
 // Spieler bleibt stehen und Runde wird ausgewertet
 async function stay() {
-
-    dealerSum = reduceAce(dealerSum, dealerAceCount);
-    yourSum = reduceAce(yourSum, yourAceCount);
 
     canHit = false;
 
@@ -241,27 +291,9 @@ async function stay() {
             reduceAce(dealerSum, dealerAceCount);
     }
 
-    let message = "";
+    const result = evaluateGame();
 
-    if (yourSum > 21) {
-        message = "Dealer gewinnt";
-    }
-    else if (dealerSum > 21) {
-        message = "Gewonnen";
-    }
-    else if (yourSum == dealerSum) {
-        message = "Unentschieden";
-    }
-    else if (yourSum > dealerSum) {
-        message = "Gewonnen";
-    }
-    else {
-        message = "Dealer gewinnt";
-    }
-
-    document.getElementById("dealer-sum").innerText = reduceAce(dealerSum, dealerAceCount);
-    document.getElementById("your-sum").innerText = yourSum;
-    document.getElementById("results").innerText = message;
+    finishGame(result);
 }
 
 // Ermittelt den Wert einer Karte
