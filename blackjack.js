@@ -166,6 +166,20 @@ function stay() {
     // Verdeckte Karte des Dealers anzeigen
     document.getElementById("hidden").src = "./cards/" + hidden + ".png";
 
+    // Dealer zieht Karten bis mindestens 17 Punkte erreicht sind
+    while (reduceAce(dealerSum, dealerAceCount) < 17) {
+
+        let card = deck.pop();
+    
+        dealerSum += getValue(card);
+        dealerAceCount += checkAce(card);
+    
+        let cardImg = document.createElement("img");
+        cardImg.src = "./cards/" + card + ".png";
+    
+        document.getElementById("dealer-cards").append(cardImg);
+    }
+
     let message = "";
 
     if (yourSum > 21) {
