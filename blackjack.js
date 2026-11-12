@@ -67,6 +67,9 @@ function resetGame() {
     yourAceCount = 0;
 
     canHit = true;
+    // Spielbuttons wieder aktivieren
+    document.getElementById("hit").disabled = false;
+    document.getElementById("stay").disabled = false;
 
     // Spielbereich leeren
     document.getElementById("dealer-cards").innerHTML =
@@ -175,6 +178,10 @@ function finishGame(result) {
 
     // Spieler darf keine Karten mehr ziehen
     canHit = false;
+    
+    // Spielbuttons deaktivieren
+    document.getElementById("hit").disabled = true;
+    document.getElementById("stay").disabled = true;
 
     let message = "";
 
@@ -227,6 +234,17 @@ function finishGame(result) {
 // Startet das Spiel
 function startGame() {
 
+    if (playerCoins < currentBet) {
+
+        document.getElementById("results").innerText =
+            "Nicht genügend KeckCoins für diesen Einsatz.";
+
+        document.getElementById("hit").disabled = true;
+        document.getElementById("stay").disabled = true;
+
+        return;
+    }
+    
     // Dealer erhält eine verdeckte Karte
     hidden = deck.pop();
 
