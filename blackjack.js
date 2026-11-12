@@ -230,19 +230,19 @@ async function stay() {
     let message = "";
 
     if (yourSum > 21) {
-        message = "You Lose!";
+        message = "Dealer gewinnt";
     }
     else if (dealerSum > 21) {
-        message = "You Win!";
+        message = "Gewonnen";
     }
     else if (yourSum == dealerSum) {
-        message = "Tie!";
+        message = "Unentschieden";
     }
     else if (yourSum > dealerSum) {
-        message = "You Win!";
+        message = "Gewonnen";
     }
     else {
-        message = "You Lose!";
+        message = "Dealer gewinnt";
     }
 
     document.getElementById("dealer-sum").innerText = reduceAce(dealerSum, dealerAceCount);
