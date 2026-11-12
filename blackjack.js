@@ -66,6 +66,12 @@ function resetGame() {
     startGame();
 }
 
+function sleep(ms) {
+    return new Promise(resolve =>
+        setTimeout(resolve, ms)
+    );
+}
+
 // Erstellt ein Standarddeck mit 52 Karten
 function buildDeck() {
     let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -111,24 +117,7 @@ function startGame() {
 
     dealerSum += getValue(hidden);
     dealerAceCount += checkAce(hidden);
-
-    // Dealer zieht Karten bis mindestens 17 Punkte erreicht sind
-    /* while (dealerSum < 17) {
-        let cardImg = document.createElement("img");
-
-        let card = deck.pop();
-
-        cardImg.src = "./cards/" + card + ".png";
-
-        dealerSum += getValue(card);
-        dealerAceCount += checkAce(card);
-
-        if(dealerVisibleSum === 0) {
-            dealerVisibleSum = getValue(card);
-        }
-
-        document.getElementById("dealer-cards").append(cardImg);
-    } */
+    
    // sichtbare Karte
    let visibleCard = deck.pop();
 
@@ -193,7 +182,7 @@ function hit() {
 }
 
 // Spieler bleibt stehen und Runde wird ausgewertet
-function stay() {
+async function stay() {
 
     dealerSum = reduceAce(dealerSum, dealerAceCount);
     yourSum = reduceAce(yourSum, yourAceCount);
@@ -206,6 +195,8 @@ function stay() {
     // Dealer zieht Karten bis mindestens 17 Punkte erreicht sind
     while (reduceAce(dealerSum, dealerAceCount) < 17) {
 
+        await sleep(1000);
+    
         let card = deck.pop();
     
         dealerSum += getValue(card);
@@ -215,6 +206,9 @@ function stay() {
         cardImg.src = "./cards/" + card + ".png";
     
         document.getElementById("dealer-cards").append(cardImg);
+    
+        document.getElementById("dealer-sum").innerText =
+            reduceAce(dealerSum, dealerAceCount);
     }
 
     let message = "";
