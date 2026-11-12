@@ -92,6 +92,19 @@ function resetGame() {
     startGame();
 }
 
+// Zur Seite für die Einsatz-Auswahl zurückkehren
+function goToBetSelection() {
+
+    // Aktuelles Guthaben speichern
+    localStorage.setItem("coins", playerCoins);
+
+    // Einsatz zurücksetzen
+    localStorage.removeItem("bet");
+
+    // Zur Einsatzseite wechseln
+    window.location.href = "bet.html";
+}
+
 function sleep(ms) {
     return new Promise(resolve =>
         setTimeout(resolve, ms)
