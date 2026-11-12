@@ -1,5 +1,7 @@
 let coins = 1000;
 
+document.getElementById("coins").innerText = coins;
+
 function startGame(bet) {
 
     if (bet > coins) {
@@ -10,5 +12,5 @@ function startGame(bet) {
     localStorage.setItem("coins", coins);
     localStorage.setItem("bet", bet);
 
-    window.location.href = "blackjack.html";
+    window.location.href = "index.html";
 }
