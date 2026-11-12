@@ -177,7 +177,23 @@ function hit() {
 
     // Ass-Werte korrigieren und Bust prüfen
     if (reduceAce(yourSum, yourAceCount) > 21) {
+    
         canHit = false;
+    
+        // Dealer-Karte aufdecken
+        document.getElementById("hidden").src =
+            "./cards/" + hidden + ".png";
+    
+        // Endgültige Werte anzeigen
+        document.getElementById("dealer-sum").innerText =
+            reduceAce(dealerSum, dealerAceCount);
+    
+        document.getElementById("your-sum").innerText =
+            reduceAce(yourSum, yourAceCount);
+    
+        // Niederlage anzeigen
+        document.getElementById("results").innerText =
+            "You Lose! Bust!";
     }
 }
 
