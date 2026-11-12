@@ -4,4 +4,8 @@ Ich arbeite an Casino Website Projekt, und muss Blackjack spiel entwickeln. Dies
 - Bevor man mit dem Spiel beginnt - muss man auswählen mit wie viel 'KeckCoins' wurde der Spielen
 Ich habe bessere design gesendet, das Spiel muss aber kein 'Verdoppeln' und 'Teilen' Buttons haben. Aber Guthaben in die Ecke und Einsatz mussen da sein
 
+<<<<<<< HEAD
 Aufgabe: erstelle die Aufgaben dafür klarer
+=======
+Aufgabe: erstelle die Aufgaben dafür klarer
+>>>>>>> 586896dc8d2ebc06567ada24b8a5b0971d5a23cc
