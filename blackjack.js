@@ -297,10 +297,6 @@ function startGame() {
         document.getElementById("your-cards").append(cardImg);
     }
 
-    // Button-Events registrieren
-    document.getElementById("hit").addEventListener("click", hit);
-    document.getElementById("stay").addEventListener("click", stay);
-
     // Punkte direkt anzeigen
     updateScoreDisplay();
 }
